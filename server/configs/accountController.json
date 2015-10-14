@@ -1,0 +1,4 @@
+{
+  "ERROR_USERNAME_ALREADY_EXISTS": "Username %s already exists!",
+  "ERROR_DATABASE": "Database error! Try again later."
+}

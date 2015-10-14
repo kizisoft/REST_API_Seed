@@ -1,0 +1,25 @@
+{
+  "development": {
+    "ROOT_PATH": "../",
+    "PORT": "3001",
+    "DB_CONNECTION": "mongodb://localhost/databaseName",
+    "STATIC_FOLDER": "public",
+    "CONTROLLERS_FOLDER": "../server/controllers",
+    "VIEW_MODELS_FOLDER": "../server/viewModels",
+    "VIEW_MODELS_VALIDATOR_FOLDER": "../utilities/viewModelsValidator.js",
+    "CURRENT_API_VERSION": "v1",
+    "DEFAULT_API_ROUTE": "/api",
+    "LOGFILE": "morgan.log"
+  },
+  "production": {
+    "ROOT_PATH": "../",
+    "DB_CONNECTION": "mongodb://admin:dsadsadsadsadsadsaddhtrytett@ds027328.mongolab.com:27328/meanTestApp",
+    "STATIC_FOLDER": "public",
+    "CONTROLLERS_FOLDER": "../server/controllers",
+    "VIEW_MODELS_FOLDER": "../server/viewModels",
+    "VIEW_MODELS_VALIDATOR_FOLDER": "../utilities/viewModelsValidator.js",
+    "CURRENT_API_VERSION": "v1",
+    "DEFAULT_API_ROUTE": "/api",
+    "LOGFILE": "morgan.log"
+  }
+}

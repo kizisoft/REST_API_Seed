@@ -1,0 +1,5 @@
+{
+  "ERROR_DB_OPEN": "Database could not be opened: ",
+  "ERROR_DB": "Database error: ",
+  "SUCCESS_DB_OPEN": "Database up and running..."
+}
