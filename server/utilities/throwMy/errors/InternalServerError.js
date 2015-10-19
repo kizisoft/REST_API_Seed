@@ -2,7 +2,7 @@
 
 function InternalServerError(error, errorCode) {
     Error.captureStackTrace(this, this.constructor);
-    this.name = 'InternalServerError';
+    this.name = this.constructor.name;
     this.message = error.message || 'Internal Server Error';
     this.statusCode = 500;
     this.errorCode = errorCode || 500;

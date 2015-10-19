@@ -37,7 +37,7 @@ function validateString(prop, obj) {
 }
 
 function validateNumber(prop, obj) {
-
+    throw new SyntaxError('Function "validateNumber" is not implemented!');
 }
 
 module.exports = {

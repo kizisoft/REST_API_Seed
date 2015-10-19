@@ -10,32 +10,30 @@ function GoogleStrategy(options, authenticate) {
     this._name = 'google';
     this._clientID = options.CLIENT_ID;
     this._clientSecret = options.CLIENT_SECRET;
-    this._callbackURL = options.callbackURL;
     this._authenticate = authenticate;
     return this;
 }
 
 GoogleStrategy.prototype.authenticate = function (req, done) {
     var self = this,
-        accessToken = JSON.tryParse(req.query.accessToken),
         google = require('googleapis'),
         plus = google.plus('v1'),
         OAuth2 = google.auth.OAuth2,
         oauth2Client = new OAuth2(this._clientID, this._clientSecret);
-    accessToken = accessToken || {};
-    oauth2Client.setCredentials({access_token: accessToken.access_token});
+    oauth2Client.setCredentials({access_token: req.query.accessToken || ''});
     plus.people.get({userId: 'me', auth: oauth2Client}, function (err, userGoogle) {
         if (err) {
-            done(err, null);
+            done({message: 'Authentication Error', errors: [err.message]}, null);
         } else {
-            self._authenticate(userGoogle, function (err, user) {
-                if (err) {
-                    done(err, null);
-                } else {
-                    req.user = user;
-                    done(null, user);
-                }
-            });
+            self._authenticate({
+                id: userGoogle.id,
+                gender: userGoogle.gender,
+                firstName: userGoogle.name.givenName,
+                lastName: userGoogle.name.familyName,
+                image: {url: userGoogle.image.url, isDefault: userGoogle.image.isDefault},
+                url: userGoogle.url,
+                email: userGoogle.emails[0] || ''
+            }, done);
         }
     });
 };

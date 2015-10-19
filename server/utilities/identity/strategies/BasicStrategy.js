@@ -10,14 +10,7 @@ function BasicStrategy(options, authenticate) {
 }
 
 BasicStrategy.prototype.authenticate = function (req, done) {
-    this._authenticate(req.query.username, req.query.password, function (err, user) {
-        if (err) {
-            done(err, null);
-        } else {
-            req.user = user;
-            done(null, user);
-        }
-    });
+    this._authenticate(req.query.username || '', req.query.password || '', done);
 };
 
 module.exports = BasicStrategy;

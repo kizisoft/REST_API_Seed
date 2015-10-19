@@ -14,7 +14,7 @@ Authenticator.prototype.use = function use(strategy) {
 
 Authenticator.prototype.deserializeUser = function (deserialize) {
     if (typeof deserialize !== 'function') {
-        throw new Error('"deserializeUser" requires function for parameter.')
+        throw new Error('"deserializeUser" requires a function as parameter.')
     }
     return this._deserialize = deserialize;
 };
@@ -34,6 +34,5 @@ Authenticator.prototype.initialize = function initialize() {
         next();
     }
 };
-
 
 module.exports = Authenticator;

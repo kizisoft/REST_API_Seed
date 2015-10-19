@@ -2,7 +2,7 @@
 
 function Unauthorized(error, errorCode) {
     Error.captureStackTrace(this, this.constructor);
-    this.name = 'Unauthorized';
+    this.name = this.constructor.name;
     this.message = error.message || 'Unauthorized';
     this.statusCode = 401;
     this.errorCode = errorCode || 401;

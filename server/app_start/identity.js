@@ -3,6 +3,7 @@
 module.exports = function (config, data) {
     var identity = require('../utilities/identity'),
         GoogleStrategy = require('../utilities/identity/strategies/GoogleStrategy'),
+        FacebookStrategy = require('../utilities/identity/strategies/FacebookStrategy'),
         BasicStrategy = require('../utilities/identity/strategies/BasicStrategy');
 
     identity.deserializeUser(function (token, done) {
@@ -24,52 +25,47 @@ module.exports = function (config, data) {
         clientID: config.identity.google.CLIENT_ID,
         clientSecret: config.identity.google.CLIENT_SECRET
     }, function (userGoogle, done) {
-        data.userLogins.getBy({providerId: userGoogle.providerId})
+        data.userLogins.getBy({providerId: userGoogle.id})
             .then(function (userLogin) {
                 userLogin = userLogin[0];
                 if (userLogin) {
                     done(null, userLogin.user);
                 } else {
-                    done({
-                        message: 'Authorization Error',
-                        errors: ['User "' + userGoogle.name.givenName + ' ' + userGoogle.name.familyName + '" is not registered locally!']
-                    }, null);
+                    done(null, false, userGoogle);
                 }
+            }).catch(function (err) {
+                done(err, null);
             })
-            .catch(function (err) {
+    }));
+
+    identity.use(new FacebookStrategy({
+        clientID: config.identity.facebook.CLIENT_ID,
+        clientSecret: config.identity.facebook.CLIENT_SECRET
+    }, function (userFb, done) {
+        data.userLogins.getBy({providerId: userFb.id})
+            .then(function (userLogin) {
+                userLogin = userLogin[0];
+                if (userLogin) {
+                    done(null, userLogin.user);
+                } else {
+                    done(null, false, userFb);
+                }
+            }).catch(function (err) {
                 done(err, null);
             })
     }));
 
     identity.use(new BasicStrategy({}, function (username, password, done) {
-        var errors = [];
-        if (!username) {
-            errors.push('Username is required!');
-        }
-        if (!password) {
-            errors.push('Password is required!');
-        }
-        if (errors.length === 0) {
-            data.users.getBy({username: username})
-                .then(function (userDb) {
-                    userDb = userDb[0];
-                    if (userDb && userDb.authenticate(password)) {
-                        done(null, userDb);
-                    } else {
-                        done({
-                            message: 'Authorization Error',
-                            errors: ['Wrong username or password!']
-                        }, null);
-                    }
-                })
-                .catch(function (err) {
-                    done(err, null);
-                });
-        } else {
-            done({
-                message: 'Authorization Error',
-                errors: errors
-            }, null);
-        }
+        data.users.getBy({username: username})
+            .then(function (userDb) {
+                userDb = userDb[0];
+                if (userDb && userDb.authenticate(password)) {
+                    done(null, userDb);
+                } else {
+                    done(null, false);
+                }
+            }).catch(function (err) {
+                done(err, null);
+            });
     }));
 };

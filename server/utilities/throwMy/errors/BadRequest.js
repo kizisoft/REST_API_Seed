@@ -2,7 +2,7 @@
 
 function BadRequest(error, errorCode) {
     Error.captureStackTrace(this, this.constructor);
-    this.name = 'BadRequest';
+    this.name = this.constructor.name;
     this.message = error.message || 'Bad Request';
     this.statusCode = 400;
     this.errorCode = errorCode || 400;

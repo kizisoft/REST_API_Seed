@@ -16,7 +16,7 @@ module.exports = function () {
     });
 
     userSchema.methods.authenticate = function (password) {
-        return encryption.generateHashedPassword(this.salt, password) === this.hashPass
+        return !!this.salt && encryption.generateHashedPassword(this.salt, password) === this.hashPass
     };
 
     userSchema.methods.isInRole = function (role) {
