@@ -19,7 +19,7 @@ FacebookStrategy.prototype.authenticate = function (req, done) {
         fb = require('fb');
     fb.api('me', {
         fields: 'id,first_name,last_name,email,gender,link,picture',
-        access_token: req.query.accessToken || ''
+        access_token: req.body.accessToken || ''
     }, function (response) {
         if (response && response.error) {
             done({message: 'Authentication Error', errors: [response.error.message]}, null);

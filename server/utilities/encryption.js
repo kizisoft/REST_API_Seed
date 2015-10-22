@@ -12,7 +12,11 @@ function generateHashedPassword(salt, pwd) {
 }
 
 function generateToken() {
-    return crypto.randomBytes(64).toString('base64');
+    return crypto.randomBytes(70)
+        .toString('base64')
+        .slice(0, 64)
+        .replace(/\+/g, '0')  // replace '+' with '0'
+        .replace(/\//g, '0'); // replace '/' with '0'
 }
 
 module.exports = {

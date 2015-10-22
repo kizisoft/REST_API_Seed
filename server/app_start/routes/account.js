@@ -12,7 +12,4 @@ module.exports = function (app, config, data) {
 
     app.route(config.server.DEFAULT_API_ROUTE + '/auth/login/:provider/')
         .post(accountController.postLogin);
-
-    app.route('/get/')
-        .get(accountController.test);
 };

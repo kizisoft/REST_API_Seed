@@ -1,13 +1,11 @@
 'use strict';
 
 module.exports = function (config) {
-    var identity = require('../utilities/identity'),
-        throwMy = require('../utilities/throwMy');
+    var throwMy = require('../utilities/throwMy');
 
-    function isAuthenticated(req, res, next) {
-        if (!req.isAuthenticated()) {
-            res.status(403)
-                .json({success: false, message: config.auth.ERROR_AUTHENTICATION_FAILED});
+    function isAuthorized(req, res, next) {
+        if (!req.isAuthorized()) {
+            next(new throwMy.Unauthorized({errors: [config.auth.ERROR_AUTHORIZATION_FAILED]}));
         } else {
             next();
         }
@@ -15,16 +13,16 @@ module.exports = function (config) {
 
     function isInRole(role) {
         return function (req, res, next) {
-            if (req.isAuthenticated() && req.user.roles.indexOf(role) > -1) {
+            if (req.isAuthorized() && req.user.roles.indexOf(role) > -1) {
                 next();
+            } else {
+                next(new throwMy.Forbidden({errors: [config.auth.ERROR_UNAUTHORIZED_ACCESS]}));
             }
-            res.status(403)
-                .json({success: false, message: config.auth.ERROR_UNAUTHORIZED_ACCESS});
         }
     }
 
     return {
-        isAuthenticated: isAuthenticated,
+        isAuthorized: isAuthorized,
         isInRole: isInRole
     }
 };

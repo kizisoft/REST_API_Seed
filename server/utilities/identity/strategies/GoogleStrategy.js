@@ -20,7 +20,7 @@ GoogleStrategy.prototype.authenticate = function (req, done) {
         plus = google.plus('v1'),
         OAuth2 = google.auth.OAuth2,
         oauth2Client = new OAuth2(this._clientID, this._clientSecret);
-    oauth2Client.setCredentials({access_token: req.query.accessToken || ''});
+    oauth2Client.setCredentials({access_token: req.body.accessToken || ''});
     plus.people.get({userId: 'me', auth: oauth2Client}, function (err, userGoogle) {
         if (err) {
             done({message: 'Authentication Error', errors: [err.message]}, null);

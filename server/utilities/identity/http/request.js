@@ -1,9 +1,9 @@
 'use strict';
 
 var http = require('http');
-http.IncomingMessage.prototype.isAuthenticated = function () {
+http.IncomingMessage.prototype.isAuthorized = function () {
     if (!this._identity) {
         throw new Error('Identity must be initialized!');
     }
-    this._identity._deserialize();
+    return !!this.user;
 };

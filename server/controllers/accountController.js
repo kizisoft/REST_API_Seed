@@ -8,7 +8,7 @@ module.exports = function (config, data) {
         UserInputModel = require('../viewModels/account/UserInputModel')(config);
 
     function postRegister(req, res, next) {
-        var userInputModel = new UserInputModel(req.query);
+        var userInputModel = new UserInputModel(req.body);
         if (userInputModel.isValid()) {
             userInputModel.salt = encryption.generateSalt();
             userInputModel.hashPass = encryption.generateHashedPassword(userInputModel.salt, userInputModel.password);
@@ -16,12 +16,7 @@ module.exports = function (config, data) {
             userInputModel.expireDate = (new Date()).addDays(1);
             data.users.add(userInputModel)
                 .then(function (userDb) {
-                    res.status(200).json({
-                        id: userDb.id,
-                        username: userDb.username,
-                        token: userDb.token,
-                        expireDate: userDb.expireDate
-                    });
+                    resultSuccessUser(res, userDb);
                 }).catch(function (err) {
                     if (err.customError === true) {
                         next(new throwMy[err.name](err));
@@ -43,7 +38,7 @@ module.exports = function (config, data) {
                 if (user) {
                     next(new throwMy.BadRequest({errors: ['User "' + user.username + '" already exist! Try to login.']}));
                 } else if (socialUser) {
-                    socialUser.username = req.query.username;
+                    socialUser.username = req.body.username;
                     socialUser.token = encryption.generateToken();
                     socialUser.expireDate = (new Date()).addDays(1);
                     data.users.add(socialUser)
@@ -55,12 +50,7 @@ module.exports = function (config, data) {
                             };
                             data.userLogins.add(userLogin)
                                 .then(function (userLoginDb) {
-                                    res.status(200).json({
-                                        id: userDb.id,
-                                        username: userDb.username,
-                                        token: userDb.token,
-                                        expireDate: userDb.expireDate
-                                    });
+                                    resultSuccessUser(res, userDb);
                                 }).catch(function (err) {
                                     next(err);
                                 });
@@ -91,12 +81,7 @@ module.exports = function (config, data) {
                         token: encryption.generateToken(),
                         expireDate: (new Date()).addDays(1)
                     }).then(function (userDb) {
-                        res.status(200).json({
-                            id: userDb._id,
-                            username: userDb.username,
-                            token: userDb.token,
-                            expireDate: userDb.expireDate
-                        });
+                        resultSuccessUser(res, userDb);
                     }).catch(function (err) {
                         next(err);
                     });
@@ -111,14 +96,21 @@ module.exports = function (config, data) {
         }
     }
 
-    function test(req, res) {
-        res.status(200).json({error: false, test: 'Test passed!'});
+    function resultSuccessUser(res, user) {
+        res.status(200).json({
+            id: user.id,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            roles: user.roles,
+            token: user.token,
+            expireDate: user.expireDate
+        });
     }
 
     return {
         postRegister: postRegister,
         postRegisterSocial: postRegisterSocial,
-        postLogin: postLogin,
-        test: test
+        postLogin: postLogin
     };
 };

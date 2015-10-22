@@ -29,9 +29,20 @@ Authenticator.prototype.authenticate = function authenticate(strategyName, done)
 Authenticator.prototype.initialize = function initialize() {
     var self = this;
     return function (req, res, next) {
+        var authorization = req.header('authorization'),
+            token = authorization ? authorization.slice(7) : req.query.authorization_token;
         self._req = req;
         req._identity = self;
-        next();
+        if (token) {
+            self._deserialize(token, function (err, user) {
+                if (!err && user) {
+                    req.user = user;
+                }
+                next();
+            });
+        } else {
+            next();
+        }
     }
 };
 
