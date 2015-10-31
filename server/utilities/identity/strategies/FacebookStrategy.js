@@ -24,15 +24,21 @@ FacebookStrategy.prototype.authenticate = function (req, done) {
         if (response && response.error) {
             done({message: 'Authentication Error', errors: [response.error.message]}, null);
         } else {
-            self._authenticate({
+            var socialUser = {
                 id: response.id,
                 gender: response.gender,
                 firstName: response.first_name,
                 lastName: response.last_name,
                 image: {url: response.picture.data.url, isDefault: response.picture.data.is_silhouette},
                 url: response.link,
-                email: response.email
-            }, done);
+                email: response.email || ''
+            };
+            self._authenticate(socialUser, function (err, userDb) {
+                if (!err && !userDb) {
+                    return done(null, false, socialUser);
+                }
+                done(err, userDb);
+            });
         }
     });
 };

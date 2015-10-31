@@ -8,8 +8,7 @@ module.exports = function () {
         user: {
             type: mongoose.Schema.ObjectId,
             ref: 'User',
-            required: true,//'{PATH} is required',
-            unique: true
+            required: true
         },
         providerId: {type: String, required: '{PATH} is required', unique: true},
         provider: {type: String, required: '{PATH} is required'}

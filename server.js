@@ -1,7 +1,7 @@
 var https = require('https'),
     fs = require('fs'),
-    hskey = fs.readFileSync('D:\\Tests\\TestAppsJS\\test_1-key.pem'),
-    hscert = fs.readFileSync('D:\\Tests\\TestAppsJS\\test_1-cert.pem'),
+    hskey = fs.readFileSync('privatekey.key'),
+    hscert = fs.readFileSync('certificate.crt'),
     credentials = {
         key: hskey,
         cert: hscert

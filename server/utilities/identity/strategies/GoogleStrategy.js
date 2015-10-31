@@ -25,15 +25,21 @@ GoogleStrategy.prototype.authenticate = function (req, done) {
         if (err) {
             done({message: 'Authentication Error', errors: [err.message]}, null);
         } else {
-            self._authenticate({
+            var socialUser = {
                 id: userGoogle.id,
                 gender: userGoogle.gender,
                 firstName: userGoogle.name.givenName,
                 lastName: userGoogle.name.familyName,
                 image: {url: userGoogle.image.url, isDefault: userGoogle.image.isDefault},
                 url: userGoogle.url,
-                email: userGoogle.emails[0] || ''
-            }, done);
+                email: userGoogle.emails[0].value || ''
+            };
+            self._authenticate(socialUser, function (err, userDb) {
+                if (!err && !userDb) {
+                    return done(null, false, socialUser);
+                }
+                done(err, userDb);
+            });
         }
     });
 };

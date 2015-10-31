@@ -21,8 +21,16 @@ module.exports = {
                 });
             });
         },
-        del: function del() {
-
+        del: function del(option) {
+            return new Promise(function (resolve, reject) {
+                UserLogin.remove(option, function (err, result) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
         },
         getBy: function getBy(option) {
             return new Promise(function (resolve, reject) {

@@ -49,7 +49,7 @@ module.exports = function (config, data) {
                                 provider: req.params.provider
                             };
                             data.userLogins.add(userLogin)
-                                .then(function (userLoginDb) {
+                                .then(function () {
                                     resultSuccessUser(res, userDb);
                                 }).catch(function (err) {
                                     next(err);
@@ -96,13 +96,25 @@ module.exports = function (config, data) {
         }
     }
 
+    function putLogout(req, res, next) {
+        data.users.update(req.user._id, {token: '', expireDate: (new Date())})
+            .then(function () {
+                res.status(200).end();
+            }).catch(function (err) {
+                next(err);
+            });
+    }
+
     function resultSuccessUser(res, user) {
         res.status(200).json({
             id: user.id,
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
+            image: user.image,
+            email: user.email,
             roles: user.roles,
+            isLocalUser: user.hashPass && user.salt,
             token: user.token,
             expireDate: user.expireDate
         });
@@ -111,6 +123,7 @@ module.exports = function (config, data) {
     return {
         postRegister: postRegister,
         postRegisterSocial: postRegisterSocial,
-        postLogin: postLogin
+        postLogin: postLogin,
+        putLogout: putLogout
     };
 };

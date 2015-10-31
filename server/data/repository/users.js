@@ -47,7 +47,7 @@ function all() {
 
 function update(id, updates) {
     return new Promise(function (resolve, reject) {
-        User.findOneAndUpdate({_id: id}, updates, function (err, userDb) {
+        User.findOneAndUpdate({_id: id}, updates, {new: true}, function (err, userDb) {
             if (err) {
                 reject(err);
             } else {

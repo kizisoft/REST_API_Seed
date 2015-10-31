@@ -11,6 +11,14 @@ module.exports = function (config) {
         }
     }
 
+    function isNotAuthorized(req, res, next) {
+        if (req.isAuthorized()) {
+            next(new throwMy.BadRequest({errors: [config.auth.ERROR_ALREADY_AUTHORIZED]}));
+        } else {
+            next();
+        }
+    }
+
     function isInRole(role) {
         return function (req, res, next) {
             if (req.isAuthorized() && req.user.roles.indexOf(role) > -1) {
@@ -23,6 +31,7 @@ module.exports = function (config) {
 
     return {
         isAuthorized: isAuthorized,
+        isNotAuthorized: isNotAuthorized,
         isInRole: isInRole
     }
 };

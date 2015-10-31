@@ -31,7 +31,7 @@ module.exports = function (config, data) {
                 if (userLogin) {
                     done(null, userLogin.user);
                 } else {
-                    done(null, false, userGoogle);
+                    done(null, false);
                 }
             }).catch(function (err) {
                 done(err, null);
@@ -48,7 +48,7 @@ module.exports = function (config, data) {
                 if (userLogin) {
                     done(null, userLogin.user);
                 } else {
-                    done(null, false, userFb);
+                    done(null, false);
                 }
             }).catch(function (err) {
                 done(err, null);
