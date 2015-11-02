@@ -8,7 +8,9 @@ module.exports = function (app, config, data) {
         .post(auth.isAuthorized, profileController.addLogin);
 
     app.route(config.server.DEFAULT_API_ROUTE + '/profile/logins/')
-        .get(auth.isAuthorized, profileController.getLogins);
+        .get(auth.isAuthorized, profileController.getLogins)
+        .post(auth.isAuthorized, profileController.setLocalPassword)
+        .put(auth.isAuthorized, profileController.changeLocalPassword);
 
     app.route(config.server.DEFAULT_API_ROUTE + '/profile/logins/:id')
         .delete(auth.isAuthorized, profileController.deleteLogin);
