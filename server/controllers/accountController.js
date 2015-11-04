@@ -5,7 +5,8 @@ module.exports = function (config, data) {
         identity = require('../utilities/identity'),
         encryption = require('../utilities/encryption'),
         throwMy = require('../utilities/throwMy'),
-        UserInputModel = require('../viewModels/account/UserInputModel')(config);
+        UserInputModel = require('../viewModels/account/UserInputModel')(config),
+        UserViewModel = require('../viewModels/account/UserViewModel')(config);
 
     function postRegister(req, res, next) {
         var userInputModel = new UserInputModel(req.body);
@@ -106,18 +107,8 @@ module.exports = function (config, data) {
     }
 
     function resultSuccessUser(res, user) {
-        res.status(200).json({
-            id: user.id,
-            username: user.username,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            image: user.image,
-            email: user.email,
-            roles: user.roles,
-            isLocalUser: user.hashPass && user.salt,
-            token: user.token,
-            expireDate: user.expireDate
-        });
+        var userViewModel = new UserViewModel(user);
+        res.status(200).json(userViewModel);
     }
 
     return {
